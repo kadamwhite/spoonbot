@@ -2,17 +2,17 @@
 // Sumobot Jr demo program
 // =======================
 
-var five = require("johnny-five");
+var five = require('johnny-five');
 var keypress = require('keypress');
 
 keypress(process.stdin);
 
 var board = new five.Board();
 
-board.on("ready", function() {
+board.on('ready', function() {
 
-  console.log("Welcome to Sumobot Jr!")
-  console.log("Control the bot with the arrow keys, and SPACE to stop.")
+  console.log('Welcome to Sumobot Jr!')
+  console.log('Control the bot with the arrow keys, and SPACE to stop.')
 
   var left_wheel  = new five.Servo({ pin: 10, type: 'continuous' }).stop();
   var right_wheel = new five.Servo({ pin: 9, type: 'continuous'  }).stop();
