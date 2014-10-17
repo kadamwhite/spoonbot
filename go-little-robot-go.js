@@ -160,6 +160,8 @@ board.on( 'ready', function() {
     console.log( 'connected' );
     socket.on( 'keydown', function( keys ) {
       if (keys.q) {
+        danceBot.clear();
+        danceBot.stop();
         process.exit();
       }
       if (keys['dance!']) {
@@ -183,6 +185,8 @@ board.on( 'ready', function() {
     })
     .on('disconnect', function() {
       console.log('disconnected');
+      danceBot.clear();
+      danceBot.stop();
       process.exit();
     });
   });

@@ -51,13 +51,13 @@ function key( which ) {
   // console.log(which);
   switch( which ) {
     // Movement control
-    case 37:
+    case 37: // left
       return 'l';
-    case 38:
+    case 38: // up
       return 'u';
-    case 39:
+    case 39: // down
       return 'r';
-    case 40:
+    case 40: // right
       return 'd';
 
     // LED control
@@ -73,12 +73,13 @@ function key( which ) {
       return '4';
 
     // App control
-    case 32:
+    case 32: // space
+    case 68: // d
       return 'dance!';
     case 16:
       return 'relax';
-    case 81:
-    case 27:
+    case 81: // q
+    case 27: // esc
       return 'q';
   }
 }
