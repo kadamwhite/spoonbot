@@ -34,58 +34,12 @@ board.on('ready', function() {
 
     switch (key.name) {
 
-      case 'escape':
-      case 'q':
-        console.log('Quitting');
-        // go.stop();
-        process.exit();
-        return;
-
-      case 'up':
-      case 'w':
-
-        // leftW.speedUp();
-        led.on();
-
-
-        console.log('Forward');
-        // left_wheel.ccw(speed);
-        // right_wheel.cw();
-        return;
-
-      case 'down':
-      case 's':
-        // leftW.speedDown();
-        led.off();
-
-        console.log('Backward');
-        // left_wheel.cw();
-        // right_wheel.ccw(speed);
-        return;
-
-      case 'left':
-      case 'a':
-        console.log('Left');
-        left_wheel.ccw(speed);
-        right_wheel.ccw(speed);
-        return;
-
-
-      case 'right':
-      case 'd':
-        console.log('Right');
-        left_wheel.cw();
-        right_wheel.cw();
-        return;
-
-      case 'space':
-        console.log('Stopping');
-        left_wheel.stop();
-        right_wheel.stop();
-        return;
-
       case 'f':
         led.flash();
+        return;
+
+      case 'u':
+        led.clear();
         return;
 
       case 'i':
@@ -98,10 +52,6 @@ board.on('ready', function() {
 
       case 'p':
         led.bpm( 111.259 ).four();
-        return;
-
-      case 'u':
-        led.clear();
         return;
 
       default:

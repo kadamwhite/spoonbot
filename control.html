@@ -7,14 +7,13 @@
       box-sizing: border-box;
     }
     body {
-      padding-top: 33%;
-      font: 13px;
+      padding-top: 10%;
+      text-align: center;
     }
     h2 {
       font-family: Palatino, 'Times New Roman', serif;
       font-style: italic;
-      text-align: center;
-      text-shadow: 0 0 1px #666;
+      text-shadow: 0 0 1px #222;
       color: white;
     }
   </style>
@@ -22,12 +21,20 @@
   <script src="//code.jquery.com/jquery-1.11.1.js"></script>
 </head>
 <body>
+  <div>
+    <h2>You behind the wheel / and me the passenger</h2>
+    <form action="">
+    <input type="number" step="0.001" name="bpm">
+    <button type="submit">Set BPM</button>
+    </form>
+  </div>
 
 <script>
 
 function key( which ) {
   console.log(which);
   switch( which ) {
+    // Movement control
     case 37:
       return 'l';
     case 38:
@@ -36,9 +43,27 @@ function key( which ) {
       return 'r';
     case 40:
       return 'd';
+
+    // LED control
+    case 70:
+      return 'f';
+    case 48:
+      return '0';
+    case 49:
+      return '1';
+    case 50:
+      return '2';
+    case 52:
+      return '4';
+
+    // App control
+    case 81:
+    case 27:
+      return 'q';
   }
 }
 
+// All movement keys default explicilty to false
 var keys = {
   r: false,
   u: false,
@@ -46,23 +71,38 @@ var keys = {
   d: false
 };
 
-var socket = io();
+// mockSocket is for dev mode, when we run this as static HTML:
+var mockSocket = {
+  on: function() {},
+  emit: function(){}
+};
 
-socket.on('ready', function() {
-  $('body').append('<h2>You behind the wheel / and me the passenger</h2>');
+var socket = window.io ? io() : mockSocket;
+
+socket.on( 'ready', function() {
+  $( 'div' ).fadeIn();
 });
 
-$(document).on( 'keydown', function( evt ) {
+$( document ).on( 'keydown', function( evt ) {
   // Flip state of that key
   keys[ key( evt.which ) ] = true;
   socket.emit( 'keydown', keys );
   if ( evt.which === 81 ) {
     close();
   }
+  // socket.emit( 'led',  );
 }).on( 'keyup', function( evt ) {
   // Flip state of that key
   keys[ key( evt.which ) ] = false;
   socket.emit( 'keyup', keys );
+});
+
+$('form').on('submit', function(evt) {
+  var bpm = $( '[name="bpm"]' ).val();
+  evt.preventDefault();
+  socket.emit( 'bpm', bpm );
+}).on('keydown', function(evt) {
+  evt.stopPropagation();
 });
 
 // socket.on('chat message', function(msg){

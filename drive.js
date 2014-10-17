@@ -32,6 +32,12 @@ board.on( 'ready', function() {
   var left_wheel  = new five.Servo({ pin: 9, type: 'continuous', range: [75, 105] }).stop();
   var right_wheel = new five.Servo({ pin: 10, type: 'continuous'  }).stop();
 
+
+  var LED = require( './modules/LED2' );
+  var led = new LED( new five.Led( 13 ) );
+
+  led.bpm(111.259);
+
   // // pass to led.brightness
   // five.Fn.map(speed, 0,1,0,255)
 
@@ -40,6 +46,28 @@ board.on( 'ready', function() {
   var leftW = new Wheel( left_wheel, true );
   var rightW = new Wheel( right_wheel, false );
 
+  function controlLED( keys ) {
+    // console.log( keys );
+    if ( keys.f ) {
+      led.flash();
+    }
+
+    if ( keys[ '0' ] ) {
+      led.clear();
+    }
+
+    if ( keys[ '4' ] ) {
+      led.beat().full();
+    }
+
+    if ( keys[ '2' ] ) {
+      led.beat().half();
+    }
+
+    if ( keys[ '1' ] ) {
+      led.beat().quarter();
+    }
+  }
 
   function status( keys ) {
     var str = '';
@@ -55,7 +83,6 @@ board.on( 'ready', function() {
   function go( state ) {
     switch( state ) {
       case '':
-        console.log('stop (' + state + ')');
         leftW.stop();
         rightW.stop();
         break;
@@ -63,55 +90,51 @@ board.on( 'ready', function() {
       // One-key moves
       case 'r':
       case 'rud':
-        console.log('right (' + state + ')');
         leftW.forward('full');
         rightW.backward('half');
         break;
 
       case 'u':
       case 'rul':
-        console.log('forward (' + state + ')');
         leftW.forward('full');
         rightW.forward('full');
         break;
 
       case 'l':
       case 'uld':
-        console.log('left (' + state + ')');
         leftW.backward('half');
         rightW.forward('full');
         break;
 
       case 'd':
       case 'rld':
-        console.log('back (' + state + ')');
         leftW.backward('full');
         rightW.backward('full');
         break;
 
       // Two-key moves
       case 'ul':
-        console.log('forward left (' + state + ')');
-        leftW.forward('half');
+        // leftW.forward('half');
+        leftW.stop();
         rightW.forward('full');
         break;
 
       case 'ru':
-        console.log('forward right (' + state + ')');
         leftW.forward('full');
-        rightW.forward('half');
+        // rightW.forward('half');
+        rightW.stop();
         break;
 
       case 'ld':
-        console.log('backward left (' + state + ')');
-        leftW.backward('half');
+        // leftW.backward('half');
+        leftW.stop();
         rightW.backward('full');
         break;
 
       case 'rd':
-        console.log('backward right (' + state + ')');
         leftW.backward('full');
-        rightW.backward('half');
+        // rightW.backward('half');
+        rightW.stop();
         break;
 
       default:
@@ -127,11 +150,17 @@ board.on( 'ready', function() {
         process.exit();
       }
       io.emit( 'keydown', keys );
+      controlLED( keys );
       go( status( keys ) );
-    }).on( 'keyup', function( keys ) {
+    })
+    .on( 'keyup', function( keys ) {
       io.emit( 'keyup', keys );
       go( status( keys ) );
-    }).on('disconnect', function(){
+    })
+    .on( 'bpm', function( bpm ) {
+      led.bpm( bpm );
+    })
+    .on('disconnect', function() {
       console.log('disconnected');
       process.exit();
     });
