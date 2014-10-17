@@ -18,6 +18,7 @@ Dance.prototype.bpm = function( bpm ) {
 
 Dance.prototype.clear = function() {
   clearTimeout( this.danceTimeout );
+  this._dancing = false;
   this.stop();
 };
 
@@ -60,9 +61,12 @@ Dance.prototype.for = function( time, move ) {
 Dance.prototype.in = function( beats ) {
   var beatPromise = after( this.msPerBeat * beats );
 
-  function resolve(fn) {
+  var resolve = function(fn) {
+    if (!this._dancing) {
+      return;
+    }
     beatPromise.then(fn);
-  };
+  }.bind(this);
 
   return {
     beat: resolve,
@@ -189,6 +193,9 @@ Dance.prototype.stepStepStep = function() {
 // Put it all together, and do it once a measure
 
 Dance.prototype.breakItDown = function() {
+  clearTimeout( this.danceTimeout );
+  this._dancing = true;
+
   var moves = [
     'shuffleLeft',
     'shuffleRight',

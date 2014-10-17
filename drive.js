@@ -88,7 +88,6 @@ board.on( 'ready', function() {
   function go( state ) {
     switch( state ) {
       case '':
-        danceBot.stop();
         leftW.stop();
         rightW.stop();
         break;
@@ -163,8 +162,12 @@ board.on( 'ready', function() {
       if (keys.q) {
         process.exit();
       }
-      if (keys.d) {
+      if (keys['dance!']) {
+        danceBot.clear();
         danceBot.breakItDown();
+      }
+      if (keys['relax']) {
+        danceBot.clear();
       }
       io.emit( 'keydown', keys );
       controlLED( keys );
@@ -199,6 +202,7 @@ board.on( 'ready', function() {
 
     if ( key.name === 'd' ) {
       console.log('breakin\' it down');
+      danceBot.clear();
       danceBot.breakItDown();
       return;
     }
