@@ -145,34 +145,34 @@ Dance.prototype.chaChaLeft = function() {
 };
 
 Dance.prototype.shuffleLeft = function() {
-  this.for( 125, 'toTheLeft' );
+  this.toTheLeft();
 
   this.in(1).beat(function() {
-    this.for( 125, 'toTheLeft');
+    this.toTheLeft();
   }.bind(this));
 
   this.in(2).beats(function() {
-    this.for( 125, 'toTheLeft');
+    this.toTheLeft();
   }.bind(this));
 
   this.in(3).beats(function() {
-    this.for( 125, 'toTheLeft');
+    this.toTheLeft();
   }.bind(this));
 };
 
 Dance.prototype.shuffleRight = function() {
-  this.for( 125, 'toTheRight' );
+  this.toTheRight( );
 
   this.in(1).beat(function() {
-    this.for( 125, 'toTheRight');
+    this.toTheRight();
   }.bind(this));
 
   this.in(2).beats(function() {
-    this.for( 125, 'toTheRight');
+    this.toTheRight();
   }.bind(this));
 
   this.in(3).beats(function() {
-    this.for( 125, 'toTheRight');
+    this.toTheRight();
   }.bind(this));
 };
 
