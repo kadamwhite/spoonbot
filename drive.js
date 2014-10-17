@@ -12,6 +12,8 @@ var http = require( 'http' ).Server( app );
 var io = require( 'socket.io' )( http );
 var open = require( 'open' );
 
+var Dance = require( './modules/Dance' );
+
 app.get( '/', function( req, res ) {
   res.sendfile( 'control.html' );
 });
@@ -36,8 +38,6 @@ board.on( 'ready', function() {
   var LED = require( './modules/LED2' );
   var led = new LED( new five.Led( 13 ) );
 
-  led.bpm(111.259);
-
   // // pass to led.brightness
   // five.Fn.map(speed, 0,1,0,255)
 
@@ -45,6 +45,11 @@ board.on( 'ready', function() {
 
   var leftW = new Wheel( left_wheel, true );
   var rightW = new Wheel( right_wheel, false );
+
+  var danceBot = new Dance( leftW, rightW );
+
+  led.bpm(111.259);
+  danceBot.bpm(111.259);
 
   function controlLED( keys ) {
     // console.log( keys );
@@ -83,6 +88,7 @@ board.on( 'ready', function() {
   function go( state ) {
     switch( state ) {
       case '':
+        danceBot.stop();
         leftW.stop();
         rightW.stop();
         break;
@@ -90,48 +96,56 @@ board.on( 'ready', function() {
       // One-key moves
       case 'r':
       case 'rud':
+        danceBot.stop();
         leftW.forward('full');
         rightW.backward('half');
         break;
 
       case 'u':
       case 'rul':
+        danceBot.stop();
         leftW.forward('full');
         rightW.forward('full');
         break;
 
       case 'l':
       case 'uld':
+        danceBot.stop();
         leftW.backward('half');
         rightW.forward('full');
         break;
 
       case 'd':
       case 'rld':
+        danceBot.stop();
         leftW.backward('full');
         rightW.backward('full');
         break;
 
       // Two-key moves
       case 'ul':
+        danceBot.stop();
         // leftW.forward('half');
         leftW.stop();
         rightW.forward('full');
         break;
 
       case 'ru':
+        danceBot.stop();
         leftW.forward('full');
         // rightW.forward('half');
         rightW.stop();
         break;
 
       case 'ld':
+        danceBot.stop();
         // leftW.backward('half');
         leftW.stop();
         rightW.backward('full');
         break;
 
       case 'rd':
+        danceBot.stop();
         leftW.backward('full');
         // rightW.backward('half');
         rightW.stop();
@@ -149,6 +163,9 @@ board.on( 'ready', function() {
       if (keys.q) {
         process.exit();
       }
+      if (keys.d) {
+        danceBot.breakItDown();
+      }
       io.emit( 'keydown', keys );
       controlLED( keys );
       go( status( keys ) );
@@ -159,6 +176,7 @@ board.on( 'ready', function() {
     })
     .on( 'bpm', function( bpm ) {
       led.bpm( bpm );
+      danceBot.bpm( bpm );
     })
     .on('disconnect', function() {
       console.log('disconnected');
@@ -179,29 +197,9 @@ board.on( 'ready', function() {
       return;
     }
 
-    if ( key.name === 'r' ) {
-      leftW.forward('full');
-      return;
-    }
-    if ( key.name === 'f' ) {
-      leftW.stop();
-      return;
-    }
-    if ( key.name === 'v' ) {
-      leftW.backward('full');
-      return;
-    }
-
-    if ( key.name === 't' ) {
-      rightW.forward('full');
-      return;
-    }
-    if ( key.name === 'g' ) {
-      rightW.stop();
-      return;
-    }
-    if ( key.name === 'b' ) {
-      rightW.backward('full');
+    if ( key.name === 'd' ) {
+      console.log('breakin\' it down');
+      danceBot.breakItDown();
       return;
     }
   });

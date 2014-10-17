@@ -187,35 +187,3 @@ board.on('ready', function() {
 
 
 });
-
-
-
-function Cat() {}
-
-Cat.prototype.toTheLeft = function() {
-  console.log('to the left');
-  return new Promise(function(res, rej) {
-    setTimeout(res, 1000);
-  });
-}
-
-Cat.prototype.toTheRight = function() {
-  console.log('to the right`');
-  return new Promise(function(res, rej) {
-    setTimeout(res, 1000);
-  });
-}
-
-Cat.prototype.start = function() {
-  console.log('gettin\' down!');
-  return Promise.resolve();
-}
-
-var cat = new Cat();
-
-cat.start()
-  .then(cat.toTheLeft)
-  .then(cat.toTheLeft)
-  .then(cat.toTheRight)
-  .then(cat.toTheRight)
-  .then(process.end);

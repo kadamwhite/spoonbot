@@ -1,3 +1,5 @@
+var Promise = require('bluebird');
+
 function after( timeout ) {
   return new Promise(function( res, rej ) {
     setTimeout( res, timeout );
