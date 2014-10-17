@@ -16,6 +16,20 @@
       text-shadow: 0 0 1px #222;
       color: white;
     }
+    .tap-bpm {
+      color: #444;
+      font-size: 12px;
+      font-family: Palatino;
+      margin-top: 1em;
+      display: inline-block;
+      border: 1px solid #aaa;
+      padding: 5px 15px;
+      cursor: pointer;
+    }
+    .tap-bpm.click {
+      color: black;
+      border-color: #222;
+    }
   </style>
   <script src="/socket.io/socket.io.js"></script>
   <script src="//code.jquery.com/jquery-1.11.1.js"></script>
@@ -26,13 +40,15 @@
     <form action="">
     <input type="number" step="0.001" name="bpm">
     <button type="submit">Set BPM</button>
+    <br>
+    <div class="tap-bpm">Tap BPM</div>
     </form>
   </div>
 
 <script>
 
 function key( which ) {
-  console.log(which);
+  // console.log(which);
   switch( which ) {
     // Movement control
     case 37:
@@ -103,6 +119,54 @@ $('form').on('submit', function(evt) {
   socket.emit( 'bpm', bpm );
 }).on('keydown', function(evt) {
   evt.stopPropagation();
+});
+
+// BPM detection
+
+var bpmTapTimeout;
+var bpmTimes = [];
+
+function getAvgTime( times ) {
+
+  var timeDifferences = times.map(function( time, idx ) {
+    var lastTime = times[ idx - 1 ] || time;
+    return ( time - lastTime );
+  });
+
+  // First value will be 0;
+  timeDifferences.shift();
+
+  // console.log(timeDifferences.map(function(diff) {
+  //   return diff / 1000;
+  // }).join(','));
+
+  var avgBeatInMS = timeDifferences.reduce(function(total, time) {
+    total += time;
+    return total;
+  }, 0) / timeDifferences.length;
+
+  return parseFloat( (60000 / avgBeatInMS).toFixed(3) );
+}
+
+$('.tap-bpm').on('click', function(evt) {
+}).on('mousedown', function() {
+  $(this).addClass('click');
+
+  bpmTimeout = clearTimeout( bpmTapTimeout );
+  bpmTimes.push(new Date());
+  // console.log(bpmTimes.length);
+  var avgTime = getAvgTime( bpmTimes );
+  if ( avgTime ) {
+    $('[name="bpm"]').val( avgTime );
+  }
+
+  // Clear array after 2s
+  bpmTapTimeout = setTimeout(function() {
+    console.log('resetting beat time array');
+    bpmTimes = [];
+  }, 2000);
+}).on('mouseup', function() {
+  $(this).removeClass('click');
 });
 
 // socket.on('chat message', function(msg){
