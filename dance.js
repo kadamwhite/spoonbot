@@ -7,6 +7,7 @@ var keypress = require('keypress');
 
 keypress(process.stdin);
 
+// var board = { on: function() {}};
 var board = new five.Board();
 
 board.on('ready', function() {
@@ -17,10 +18,14 @@ board.on('ready', function() {
   var left_wheel  = new five.Servo({ pin: 9, type: 'continuous', range: [75, 105] }).stop();
   var right_wheel = new five.Servo({ pin: 10, type: 'continuous'  }).stop();
 
+  // // pass to led.brightness
+  // five.Fn.map(speed, 0,1,0,255)
 
   // function Wheel() {
   //   var speed =
   // }
+
+  var fullSpeed = 0.5;
 
   function Wheel( wheel, cwIsForward ) {
     this._speed = 0;
@@ -51,6 +56,7 @@ board.on('ready', function() {
   Wheel.prototype.speedUp = function() {
     this._speed += 0.05;
     this._speed = parseFloat( this._speed.toFixed( 2 ) );
+    console.log(this._speed);
     if ( this._speed > 0.5 ) { this._speed = 0.5 };
     this.go( this._speed );
   };
@@ -58,6 +64,7 @@ board.on('ready', function() {
   Wheel.prototype.speedDown = function() {
     this._speed -= 0.05;
     this._speed = parseFloat( this._speed.toFixed( 2 ) );
+    console.log(this._speed);
     if ( this._speed < -0.5 ) { this._speed = -0.5 };
     this.go( this._speed );
   };
@@ -180,3 +187,35 @@ board.on('ready', function() {
 
 
 });
+
+
+
+function Cat() {}
+
+Cat.prototype.toTheLeft = function() {
+  console.log('to the left');
+  return new Promise(function(res, rej) {
+    setTimeout(res, 1000);
+  });
+}
+
+Cat.prototype.toTheRight = function() {
+  console.log('to the right`');
+  return new Promise(function(res, rej) {
+    setTimeout(res, 1000);
+  });
+}
+
+Cat.prototype.start = function() {
+  console.log('gettin\' down!');
+  return Promise.resolve();
+}
+
+var cat = new Cat();
+
+cat.start()
+  .then(cat.toTheLeft)
+  .then(cat.toTheLeft)
+  .then(cat.toTheRight)
+  .then(cat.toTheRight)
+  .then(process.end);

@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head>
+  <title>Socket.IO chat</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      padding-top: 33%;
+      font: 13px;
+    }
+    h2 {
+      font-family: Palatino, 'Times New Roman', serif;
+      font-style: italic;
+      text-align: center;
+      text-shadow: 0 0 1px #666;
+      color: white;
+    }
+  </style>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="//code.jquery.com/jquery-1.11.1.js"></script>
+</head>
+<body>
+
+<script>
+
+function key( which ) {
+  console.log(which);
+  switch( which ) {
+    case 37:
+      return 'l';
+    case 38:
+      return 'u';
+    case 39:
+      return 'r';
+    case 40:
+      return 'd';
+  }
+}
+
+var keys = {
+  r: false,
+  u: false,
+  l: false,
+  d: false
+};
+
+var socket = io();
+
+socket.on('ready', function() {
+  $('body').append('<h2>You behind the wheel / and me the passenger</h2>');
+});
+
+$(document).on( 'keydown', function( evt ) {
+  // Flip state of that key
+  keys[ key( evt.which ) ] = true;
+  socket.emit( 'keydown', keys );
+  if ( evt.which === 81 ) {
+    close();
+  }
+}).on( 'keyup', function( evt ) {
+  // Flip state of that key
+  keys[ key( evt.which ) ] = false;
+  socket.emit( 'keyup', keys );
+});
+
+// socket.on('chat message', function(msg){
+//   $('#messages').append($('<li>').text(msg));
+// });
+
+</script>
+</body>
+</html>

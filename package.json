@@ -5,8 +5,11 @@
   "description": "SumoBot Jr Examples",
   "homepage": "",
   "dependencies": {
+    "express": "^4.9.7",
     "johnny-five": "latest",
     "keypress": "latest",
+    "open": "0.0.5",
+    "socket.io": "^1.1.0",
     "spark-io": "latest"
   },
   "devDependencies": {},
