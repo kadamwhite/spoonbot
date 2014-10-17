@@ -35,7 +35,7 @@ board.on( 'ready', function() {
   var right_wheel = new five.Servo({ pin: 10, type: 'continuous'  }).stop();
 
 
-  var LED = require( './modules/LED2' );
+  var LED = require( './modules/LED' );
   var led = new LED( new five.Led( 13 ) );
 
   // // pass to led.brightness

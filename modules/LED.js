@@ -1,3 +1,5 @@
+var Promise = require('bluebird');
+
 function after( timeout ) {
   return new Promise(function( res, rej ) {
     setTimeout( res, timeout );
@@ -30,37 +32,41 @@ LED.prototype.clear = function() {
 LED.prototype.bpm = function( bpm ) {
   console.log( 'setting BPM' );
 
-  var msPerBeat = 60 / bpm * 1000;
+  this.msPerBeat = 60 / bpm * 1000;
+};
 
+LED.prototype.beat = function() {
   var flash = function() {
     this.flash();
   }.bind(this);
 
+  var msPerBeat = this.msPerBeat;
+
   var one = function() {
     clearInterval( this.interval );
-    console.log('flashing every beat');
+    // console.log('flashing every beat');
     flash();
-    this.interval = setInterval( flash, Math.floor( msPerBeat ) );
+    this.interval = setInterval( flash, msPerBeat );
   }.bind(this);
 
   var two = function() {
     clearInterval( this.interval );
-    console.log('flashing ever half-beat');
+    // console.log('flashing ever half-beat');
     flash();
-    this.interval = setInterval( flash, Math.floor( msPerBeat / 2 ) );
+    this.interval = setInterval( flash, msPerBeat / 2 );
   }.bind(this);
 
   var four = function() {
     clearInterval( this.interval );
-    console.log('flashing every quarter beat');
+    // console.log('flashing every quarter beat');
     flash();
-    this.interval = setInterval( flash, Math.floor( msPerBeat / 4 ) );
+    this.interval = setInterval( flash, msPerBeat / 4 );
   }.bind(this);
 
   return {
-    one: one,
-    two: two,
-    four: four
+    full: one,
+    half: two,
+    quarter: four
   };
 };
 
